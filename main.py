@@ -1,6 +1,6 @@
 #Load and initialize Modules here
 import pygame
-from src import spritesheet
+from src import spritesheet, input
 pygame.init()
 
 #Window Information
@@ -30,8 +30,12 @@ class MainRun(object):
         self.Main()
 
     def update(self):
-        pass
-
+        if input.is_key_down(pygame.K_LEFT):
+            self.dir = -1
+        elif input.is_key_down(pygame.K_RIGHT):
+            self.dir = 1
+        else:
+            self.dir = 0
 
     def render(self):
         window.blit(images[self.dir+1], images[self.dir+1].get_rect())
@@ -51,14 +55,9 @@ class MainRun(object):
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_LEFT:
-                        self.dir = -1
-                    elif event.key == pygame.K_RIGHT:
-                        self.dir = 1
-                    else:
-                        self.dir = 0
-
+                if event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
+                    input.invoke(event.key, event.type)
+            self.update()
             self.render()
 
             #Also things like score updates or drawing additional items
